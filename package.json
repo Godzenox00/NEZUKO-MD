@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/Godzenox00/NEZUKO-MD#readme",
   "dependencies": {
-    "@whiskeysockets/baileys": "github:Godzenox00/Nezuko-baileys",
+    "@whiskeysockets/baileys": "*",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "3.0.0",
     "@google/generative-ai": "^0.5.0",
