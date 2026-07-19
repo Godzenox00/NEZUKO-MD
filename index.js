@@ -77,20 +77,44 @@ async function Zenox() {
   await config.DATABASE.sync();
 
   const { state, saveCreds } = await useMultiFileAuthState(sessionDir, pino({ level: "silent" }));
+
+  let useQR = false;
+  let usePairing = false;
+  let phoneNumber = "";
+
+  if (!state.creds || !state.creds.registered) {
+    console.log("\n-----------------------------------------");
+    const choice = await question('Select Authentication Method:\nType "1" for QR Code\nType "2" for Pairing Code\nEnter choice: ');
+    
+    if (choice.trim() === '1') {
+      useQR = true;
+    } else if (choice.trim() === '2') {
+      usePairing = true;
+      phoneNumber = await question('Please enter your WhatsApp number (with country code, e.g., 91XXXXXXXXXX): ');
+    } else {
+      console.log("Invalid choice. Defaulting to QR Code.");
+      useQR = true;
+    }
+    console.log("-----------------------------------------\n");
+  }
+
   const conn = makeWASocket({
     logger: pino({ level: "silent" }),
     auth: state,
-    printQRInTerminal: false,
+    printQRInTerminal: useQR,
     browser: ["Ubuntu", "Chrome", "20.0.04"],
     downloadHistory: false,
     syncFullHistory: false,
   });
 
-  if (!conn.authState.creds.registered) {
+  if (usePairing && !conn.authState.creds.registered) {
     setTimeout(async () => {
-      const phoneNumber = await question('Please enter your WhatsApp number (with country code, e.g., 91XXXXXXXXXX): ');
-      const code = await conn.requestPairingCode(phoneNumber.trim());
-      console.log(`\nYour Pairing Code is: ${code}\n`);
+      try {
+        const code = await conn.requestPairingCode(phoneNumber.trim());
+        console.log(`\nYour Pairing Code is: ${code}\n`);
+      } catch (error) {
+        console.error("Error requesting pairing code:", error.message);
+      }
     }, 3000);
   }
 
