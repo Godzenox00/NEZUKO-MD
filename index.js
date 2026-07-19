@@ -55,19 +55,24 @@ async function Zenox() {
     fs.mkdirSync(sessionDir, { recursive: true });
   }
 
+  // ==========================================
+  // BASE64 DECODER (Replaced Hastebin)
+  // ==========================================
   if (!fs.existsSync(sessionPath) && config.SESSION_ID) {
     try {
-      const url = `https://hastebin.com/raw/${config.SESSION_ID.split('~')[1]}`;
-      const token = '50fa5f9415fcb28006c6a7eef079b74c08eff00a26daad06be0d34c4e4ca7057a8493d22981a28634ba825c22f2f9188e14d6a446ecfa0d5d0bc371497224f5f';
-      let res = await axios.get(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      fs.writeFileSync(sessionPath, res.data.content);
-      console.log("Connection ID saved to Hastebin✅");
+      // Remove the "Nezuko~" prefix if it exists
+      let b64 = config.SESSION_ID.startsWith("Nezuko~") 
+        ? config.SESSION_ID.split('Nezuko~')[1] 
+        : config.SESSION_ID;
+        
+      // Decode Base64 back into JSON text
+      const decodedCreds = Buffer.from(b64, 'base64').toString('utf-8');
+      
+      // Save it directly as creds.json
+      fs.writeFileSync(sessionPath, decodedCreds);
+      console.log("Session ID successfully decoded and saved ✅");
     } catch (err) {
-      console.error("Failed to fetch Connection ID from Hastebin:", err.message);
+      console.error("Failed to decode Session ID. Make sure it is valid Base64:", err.message);
     }
   }
 
@@ -238,3 +243,4 @@ async function Zenox() {
 setTimeout(() => {
   Zenox();
 }, 3000);
+
