@@ -1,5 +1,12 @@
-FROM quay.io/loki-xer/jarvis-md:latest
-RUN git clone https://github.com/Godzenox00/NEZUKO-MD /root/nezuko/
-WORKDIR /root/nezuko/
-RUN yarn install --network-concurrency 1
-CMD ["node", "index.js"]
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
