@@ -5,7 +5,7 @@
   "main": "./index.js",
   "type": "commonjs",
   "scripts": {
-    "start":  "pm2 start . --attach --name nezuko"
+    "start": "pm2 start . --attach --name nezuko"
   },
   "repository": {
     "type": "git",
@@ -19,14 +19,13 @@
     "whatsapp"
   ],
   "author": "ZENOX",
-  "developer": "Zenox",
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/Godzenox00/NEZUKO-MD/issues"
   },
   "homepage": "https://github.com/Godzenox00/NEZUKO-MD#readme",
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.17",
+    "@whiskeysockets/baileys": "6.7.23",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "3.0.0",
     "@google/generative-ai": "^0.5.0",
@@ -76,4 +75,4 @@
     "ytdl-core": "^4.11.5",
     "yt-search": "^2.10.3"
   }
-  }
+}
